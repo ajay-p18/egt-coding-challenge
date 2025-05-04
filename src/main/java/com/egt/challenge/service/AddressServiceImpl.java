@@ -1,9 +1,12 @@
 package com.egt.challenge.service;
 
+import com.egt.challenge.model.Address;
 import com.egt.challenge.repo.AddressRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -12,4 +15,6 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     // TODO create methods to create, read, update, and delete Persons as outlined in the README
+
+
 }
