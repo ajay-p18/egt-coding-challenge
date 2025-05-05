@@ -37,15 +37,15 @@ public class PersonController {
     }
 
     @RequestMapping(value="/person", method = RequestMethod.POST)
-    public ResponseEntity<Person> createUser(@RequestBody Person person){
+    public ResponseEntity<Person> createUser(@RequestBody Person person) throws Exception {
         Person p = personService.save(person);
         return new ResponseEntity<>(p, HttpStatus.OK);
     }
 
     @RequestMapping(value="/person", method = RequestMethod.PUT)
-    public ResponseEntity<Person> updateUser(@RequestBody Person person){
-        Person p = personService.updatePerson(person);
-        return new ResponseEntity<>(p, HttpStatus.OK);
+    public ResponseEntity<Person> updateUser(@RequestBody Person person) throws Exception {
+        personService.updatePerson(person);
+        return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
     //hello world

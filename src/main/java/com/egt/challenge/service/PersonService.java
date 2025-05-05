@@ -8,6 +8,6 @@ import java.util.List;
 public interface PersonService {
 
     List<Person> findAll();
-    Person save(Person person);
-    Person updatePerson(Person person);
+    Person save(Person person) throws Exception;
+    Person updatePerson(Person person) throws Exception;
 }
