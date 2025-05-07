@@ -9,8 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping(PersonController.BASE_URL)
@@ -28,7 +27,31 @@ public class PersonController {
     @RequestMapping(value="/person", method = RequestMethod.GET)
     public ResponseEntity<List<Person>> getAllUsers(){
         List<Person> people = personService.findAll();
-        return new ResponseEntity<>(people, HttpStatus.OK);
+        List<Person> peopleToReturn = new ArrayList<Person>();
+
+        for(Person p: people){
+            Person p1 = new Person();
+            p1.setId(p.getId());
+            p1.setFirstName(p.getFirstName());
+            p1.setLastName(p.getLastName());
+            p1.setBirthDate(p.getBirthDate());
+
+            peopleToReturn.add(p1);
+        }
+
+        Collections.sort(peopleToReturn, new Comparator<Person>() {
+            @Override
+            public int compare(Person p1, Person p2) {
+                int lastNameComparison = p1.getLastName().compareTo(p2.getLastName());
+                if (lastNameComparison != 0) {
+                    return lastNameComparison;
+                } else {
+                    return p1.getFirstName().compareTo(p2.getFirstName());
+                }
+            }
+        });
+
+        return new ResponseEntity<>(peopleToReturn, HttpStatus.OK);
 
     }
 
