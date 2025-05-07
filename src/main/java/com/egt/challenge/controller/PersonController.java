@@ -1,20 +1,16 @@
 package com.egt.challenge.controller;
 
-import com.egt.challenge.dto.AddressDto;
 import com.egt.challenge.dto.PersonMapper;
-import com.egt.challenge.model.Address;
 import com.egt.challenge.model.Person;
 import com.egt.challenge.service.PersonService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(PersonController.BASE_URL)
@@ -46,6 +42,35 @@ public class PersonController {
     public ResponseEntity<Person> updateUser(@RequestBody Person person) throws Exception {
         personService.updatePerson(person);
         return new ResponseEntity<>(person, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/person/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Optional<Person>> deleteUser(@PathVariable Long id) throws Exception {
+        Optional<Person> personToDelete = personService.findById(id);
+        if(personToDelete.isPresent()){
+            personService.delete(personToDelete.get());
+        }
+        return new ResponseEntity<>(personToDelete, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/person/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Optional<Person>> findUserById(@PathVariable Long id) throws Exception {
+        Optional<Person> persontoFind = personService.findById(id);
+        if(persontoFind.isPresent()){
+            personService.findById(persontoFind.get().getId());
+        }
+        return new ResponseEntity<>(persontoFind, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/person/lastName", method = RequestMethod.POST)
+    public ResponseEntity<List<Person>> findUserByLastName(@RequestBody String lastName) throws Exception{
+        System.out.println("Last Name: " + lastName);
+        List<Person> people = personService.findByLastName(lastName);
+        for(Person p: people){
+            System.out.println("hello!");
+            System.out.println(p.getLastName());
+        }
+        return new ResponseEntity<>(people, HttpStatus.OK);
     }
 
     //hello world

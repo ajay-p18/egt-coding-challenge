@@ -70,4 +70,34 @@ public class PersonServiceImpl implements PersonService {
         return  p;//saving the new request body into the DB
     }
 
+    public Optional<Person> findById(Long id) throws Exception {
+         Optional<Person> person = personRepository.findById(id);
+         Person p = person.get();
+
+        if(!isValid(p,false)){
+            return null;
+        }
+
+         return person;
+    }
+
+    public void delete(Person person) throws Exception{
+
+        if(!isValid(person, false)){
+            throw new Exception("Person does not exist");
+        }
+
+        personRepository.delete(person);
+    }
+
+    public List<Person> findByLastName(String lastName) throws Exception{
+        List<Person> people = personRepository.findByLastName(lastName);
+        for(Person p: people){
+            System.out.println("hello!");
+            System.out.println(p.toString());
+        }
+
+        return people;
+    }
+
 }

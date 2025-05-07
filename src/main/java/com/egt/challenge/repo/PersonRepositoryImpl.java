@@ -51,7 +51,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         for (Map.Entry<Long, Person> entry : repo.entrySet()) {
             Long id = entry.getKey();
             Person person = entry.getValue();
-            System.out.println("ID: " + id + ", Name: " + person.getFirstName() + " " + person.getLastName());
+            //System.out.println("ID: " + id + ", Name: " + person.getFirstName() + " " + person.getLastName());
         }
 
         return new ArrayList<>(repo.values());
@@ -65,6 +65,18 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public List<Person> findByLastName(String lastName) {
+
+        for(Person p: repo.values()){
+            System.out.println(p.getLastName());
+            if(p.getLastName().equals(lastName)){
+                System.out.println("It is equal");
+            }
+
+            else{
+                System.out.println("it is not");
+            }
+        }
+
         return repo.values()
                 .stream()
                 .filter(p -> p.getLastName().equals(lastName))
