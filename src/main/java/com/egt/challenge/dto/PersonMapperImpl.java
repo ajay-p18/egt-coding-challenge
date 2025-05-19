@@ -17,18 +17,21 @@ public class PersonMapperImpl implements PersonMapper {
 
         List<AddressDto> additionalAddresses = new ArrayList<>();
 
-        for(Address address: entity.getAdditionalAddresses()){
-            AddressDto addressDto = AddressDto.builder()
-                    .id(address.getId())
-                    .street1(address.getStreet1())
-                    .street2(address.getStreet2())
-                    .city(address.getCity())
-                    .state(address.getState())
-                    .zipCode(address.getZipCode())
-                    .build();
+        if(entity.getAdditionalAddresses() != null){
+            for(Address address: entity.getAdditionalAddresses()){
+                AddressDto addressDto = AddressDto.builder()
+                        .id(address.getId())
+                        .street1(address.getStreet1())
+                        .street2(address.getStreet2())
+                        .city(address.getCity())
+                        .state(address.getState())
+                        .zipCode(address.getZipCode())
+                        .build();
 
-            additionalAddresses.add(addressDto);
+                additionalAddresses.add(addressDto);
+            }
         }
+
 
         PersonDto personDto = new PersonDto(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getBirthDate(),
                 entity.getMainAddress().getStreet1(), entity.getMainAddress().getStreet2(),entity.getMainAddress().getCity(),
@@ -37,11 +40,10 @@ public class PersonMapperImpl implements PersonMapper {
         return personDto;
     }
 
-
-
-
     @Override
     public Person toEntity(PersonDto dto) {
+
+        System.out.println(dto.toString());
 
         //Address mainAddress = new Address(dto.getStreet1(), dto.getStreet2(), dto.getCity(), dto.getState(), dto.getZipCode());
 
@@ -53,21 +55,26 @@ public class PersonMapperImpl implements PersonMapper {
                 .zipCode(dto.getZipCode())
                 .build();
 
+        System.out.println(mainAddress.toString());
+
         Set<Address> additionalAddresses = new HashSet<>();
 
-        for(AddressDto additionalAddressDto: dto.getAdditionalAddresses()){
+        if(dto.getAdditionalAddresses() != null){
+            for(AddressDto additionalAddressDto: dto.getAdditionalAddresses()){
 
-            Address address = Address.builder()
-                    .street1(additionalAddressDto.getStreet1())
-                    .street2(additionalAddressDto.getStreet2())
-                    .city(additionalAddressDto.getCity())
-                    .state(additionalAddressDto.getState())
-                    .zipCode(additionalAddressDto.getZipCode())
-                    .build();
+                Address address = Address.builder()
+                        .street1(additionalAddressDto.getStreet1())
+                        .street2(additionalAddressDto.getStreet2())
+                        .city(additionalAddressDto.getCity())
+                        .state(additionalAddressDto.getState())
+                        .zipCode(additionalAddressDto.getZipCode())
+                        .build();
 
-            additionalAddresses.add(address);
+                additionalAddresses.add(address);
 
+            }
         }
+
 
         Person person = new Person(dto.getId(),dto.getFirstName(), dto.getLastName(), dto.getBirthDate(), mainAddress, additionalAddresses);
         return person;

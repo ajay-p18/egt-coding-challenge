@@ -54,6 +54,7 @@ public class PersonController {
             }
         });
 
+
         return new ResponseEntity<>(peopleToReturn, HttpStatus.OK);
 
     }
@@ -62,43 +63,56 @@ public class PersonController {
     public ResponseEntity<Person> createUser(@RequestBody PersonDto personDto) throws Exception {
 
         Person person = personMapper.toEntity(personDto);
+        System.out.println(person.toString());
         personService.save(person);
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
     @RequestMapping(value="/person", method = RequestMethod.PUT)
-    public ResponseEntity<Person> updateUser(@RequestBody Person person) throws Exception {
+    public ResponseEntity<Person> updateUser(@RequestBody PersonDto personDto) throws Exception {
+        Person person = personMapper.toEntity(personDto);
         personService.updatePerson(person);
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
     @RequestMapping(value="/person/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Optional<Person>> deleteUser(@PathVariable Long id) throws Exception {
+    public ResponseEntity<PersonDto> deleteUser(@PathVariable Long id) throws Exception {
         Optional<Person> personToDelete = personService.findById(id);
         if(personToDelete.isPresent()){
             personService.delete(personToDelete.get());
         }
-        return new ResponseEntity<>(personToDelete, HttpStatus.OK);
+
+        PersonDto personDto = personMapper.toDto(personToDelete.get());
+        return new ResponseEntity<>(personDto, HttpStatus.OK);
     }
 
     @RequestMapping(value="/person/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Optional<Person>> findUserById(@PathVariable Long id) throws Exception {
+    public ResponseEntity<PersonDto> findUserById(@PathVariable Long id) throws Exception {
         Optional<Person> persontoFind = personService.findById(id);
         if(persontoFind.isPresent()){
             personService.findById(persontoFind.get().getId());
         }
-        return new ResponseEntity<>(persontoFind, HttpStatus.OK);
+        PersonDto persontoFindDto = personMapper.toDto(persontoFind.get());
+
+        return new ResponseEntity<>(persontoFindDto, HttpStatus.OK);
     }
 
     @RequestMapping(value="/person/lastName", method = RequestMethod.POST)
-    public ResponseEntity<List<Person>> findUserByLastName(@RequestBody String lastName) throws Exception{
+    public ResponseEntity<List<PersonDto>> findUserByLastName(@RequestBody String lastName) throws Exception{
         System.out.println("Last Name: " + lastName);
         List<Person> people = personService.findByLastName(lastName);
+        List<PersonDto> personDtos = new ArrayList<>();
         for(Person p: people){
-            System.out.println("hello!");
             System.out.println(p.getLastName());
         }
-        return new ResponseEntity<>(people, HttpStatus.OK);
+
+        for (int i = people.size() - 1; i >= 0; i--) { // Iterate in reverse to avoid issues with removing elements
+            PersonDto personDto = personMapper.toDto(people.get(i));
+            personDtos.add(personDto);
+            people.remove(i);
+        }
+
+        return new ResponseEntity<>(personDtos, HttpStatus.OK);
     }
 
     //hello world
